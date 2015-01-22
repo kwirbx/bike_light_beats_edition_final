@@ -48,6 +48,9 @@ byte SIGNAL_LEFT = 3;
 
 void setup(){
 
+    // hold on a sec while magic happens
+    delay(100);
+
     pinMode(lSwitchPin, INPUT);   //switch for pin input
     pinMode(rSwitchPin, INPUT);   //switch for pin input
     pinMode(brakePinL, INPUT);  
