@@ -1,12 +1,14 @@
+#include <ArduinoTweeno.h>
+
 // test.ino
-#include "ArduinoTweeno.h"
+//#include "ArduinoTweeno.h"
 #include "Adafruit_NeoPixel.h"
 
 
 //signal pins
 #define PIN 2
-#define PIN_L 8
-#define PIN_R 9
+#define PIN_L 5
+#define PIN_R 13
 
 #define NUM_TAIL_PX 16
 
@@ -38,7 +40,9 @@ int brakePinR = 10; //input from brake
 
 // state of various switches
 // NOTE: assumes all switches are off
-byte state[4] = {LOW, LOW, LOW, LOW};
+// Set all sensors to high to force initial check
+// of sensor state
+byte state[4] = {HIGH, HIGH, LOW, LOW};
 // indices of state flags
 byte BRAKE_RIGHT = 0;
 byte BRAKE_LEFT = 1;
@@ -48,13 +52,14 @@ byte SIGNAL_LEFT = 3;
 
 void setup(){
 
-    // hold on a sec while magic happens
-    delay(100);
-
     pinMode(lSwitchPin, INPUT);   //switch for pin input
     pinMode(rSwitchPin, INPUT);   //switch for pin input
     pinMode(brakePinL, INPUT);  
     pinMode(brakePinR, INPUT);   
+    
+    //pull up resistor init
+    //digitalWrite(lSwitchPin, HIGH);
+    //digitalWrite(rSwitchPin, HIGH);
 
     // start up the rear light compositor
     // with 16 pixels
@@ -63,7 +68,7 @@ void setup(){
     // set opacity calculation applied 
     // to all layers. use this method
     // to dim the tail light to save battery
-    comp.setGlobalOpacity(0.1);
+    comp.setGlobalOpacity(0.5);
 
     // running light that is always on
 	byte runningPxData[16 * NUM_PX_PROPS] = {
@@ -122,8 +127,8 @@ void setup(){
 
 	strip.begin();
 	strip.show();
-
-    running->spin(120);
+      
+    running->spin(120); 
 
 
     // setup front right compositor
@@ -167,19 +172,21 @@ void setup(){
 }
 
 void loop(){
+ 
+  
 
     // UPDATE BRAKE RIGHT
-    if(updateSensorState(brakePinR, BRAKE_RIGHT)){
+    if(updateSensorState(brakePinR, BRAKE_RIGHT) || (updateSensorState(brakePinL, BRAKE_LEFT) )){
         // if brake switch is open, turn
         // the brake on
-        if(state[BRAKE_RIGHT] == LOW){
+        if((state[BRAKE_RIGHT] == LOW)||(state[BRAKE_LEFT] == LOW)){
             brake->on();    
         } else {
             brake->off();
         }
     }
 
-    // UPDATE BRAKE LEFT
+   /* // UPDATE BRAKE LEFT
     if(updateSensorState(brakePinL, BRAKE_LEFT)){
         // if brake switch is open, turn
         // the brake on
@@ -188,11 +195,11 @@ void loop(){
         } else {
             brake->off();
         }
-    }
+    }*/
 
     // UPDATE SIGNAL RIGHT
     if(updateSensorState(rSwitchPin, SIGNAL_RIGHT)){
-        if(state[SIGNAL_RIGHT] == LOW){
+        if(state[SIGNAL_RIGHT] == HIGH){
             rightSig->pulse(16, 16, 16, 16);
             frontRightSig->pulse(16, 16, 16, 16);
         } else {
@@ -203,14 +210,18 @@ void loop(){
 
     // UPDATE SIGNAL LEFT
     if(updateSensorState(lSwitchPin, SIGNAL_LEFT)){
-        if(state[SIGNAL_LEFT] == LOW){
+        if(state[SIGNAL_LEFT] == HIGH){
             leftSig->pulse(16, 16, 16, 16);
             frontLeftSig->pulse(16, 16, 16, 16);
         } else {
             leftSig->off();
             frontLeftSig->off();
         }
-    }
+    }    
+    
+ 
+    
+
 
 	comp.update(millis(), false);
 	byte * composited;
