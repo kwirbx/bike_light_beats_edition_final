@@ -72,22 +72,22 @@ void setup(){
 
     // running light that is always on
 	byte runningPxData[16 * NUM_PX_PROPS] = {
-		90,0,0,0, // r, g, b, x
-		50,0,0,1, // r, g, b, x
-		30,0,0,2, // r, g, b, x
-		20,0,0,3, // r, g, b, x
-		20,0,0,4, // r, g, b, x
-		20,0,0,5, // r, g, b, x
-		30,0,0,6, // r, g, b, x
-		50,0,0,7, // r, g, b, x
-		90,0,0,8, // r, g, b, x
-		50,0,0,9, // r, g, b, x
-		30,0,0,10, // r, g, b, x
-		20,0,0,11, // r, g, b, x
-		20,0,0,12, // r, g, b, x
-		20,0,0,13, // r, g, b, x
-		30,0,0,14, // r, g, b, x
-		50,0,0,15, // r, g, b, x
+		0,15,25,0, // r, g, b, x
+		0,15,25,1, // r, g, b, x
+		0,36,50,2, // r, g, b, x
+		0,75,100,3, // r, g, b, x
+		0,75,100,4, // r, g, b, x
+		0,36,50,5, // r, g, b, x
+		0,15,25,6, // r, g, b, x
+		0,15,25,7, // r, g, b, x
+		25,8,3,8, // r, g, b, x
+		25,8,3,9, // r, g, b, x
+		50,19,3,10, // r, g, b, x
+		100,38,3,11, // r, g, b, x
+		100,38,3,12, // r, g, b, x
+		50,19,3,13, // r, g, b, x
+		25,8,3,14, // r, g, b, x
+		25,8,3,15, // r, g, b, x
 	};
 	running = comp.addLayer(16, runningPxData);
 
@@ -200,8 +200,8 @@ void loop(){
     // UPDATE SIGNAL RIGHT
     if(updateSensorState(rSwitchPin, SIGNAL_RIGHT)){
         if(state[SIGNAL_RIGHT] == HIGH){
-            rightSig->pulse(16, 16, 16, 16);
-            frontRightSig->pulse(16, 16, 16, 16);
+            rightSig->pulse(8, 8, 8, 8);
+            frontRightSig->pulse(8, 8, 8, 8);
         } else {
             rightSig->off();
             frontRightSig->off();
@@ -211,8 +211,8 @@ void loop(){
     // UPDATE SIGNAL LEFT
     if(updateSensorState(lSwitchPin, SIGNAL_LEFT)){
         if(state[SIGNAL_LEFT] == HIGH){
-            leftSig->pulse(16, 16, 16, 16);
-            frontLeftSig->pulse(16, 16, 16, 16);
+            leftSig->pulse(8, 8, 8, 8);
+            frontLeftSig->pulse(8, 8, 8, 8);
         } else {
             leftSig->off();
             frontLeftSig->off();
